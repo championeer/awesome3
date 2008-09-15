@@ -1,0 +1,9 @@
+#Vol Down
+"amixer set PCM 2dB- unmute"
+    m:0x0 + c:174
+#Vol Up 
+"amixer set PCM 2dB+ unmute"
+    m:0x0 + c:176
+#Vol mute
+"amixer set PCM mute"
+    m:0x0 + c:160
