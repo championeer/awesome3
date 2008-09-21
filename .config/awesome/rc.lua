@@ -13,12 +13,14 @@ theme_path = "/home/qianli/.config/awesome/themes/my"
 
 -- This is used later as the default terminal to run.
 --terminal = "xterm"
-home = "/home/qianli/.config/awesome/"
+--home = "/home/qianli/.config/awesome/"
 terminal = "urxvtc"
 filemanager = "rox"
 browser = "firefox"
 editor = "emacs"
 dict = "stardict"
+vm = "VirtualBox"
+fm = "thunar"
 lock = "xscreensaver-command -lock"
 --menu = "`dmenu_path | dmenu -b -fn '-*-fixed-medium-r-normal--20-*-*-*-*-*-*-*' -nb '#000000' -nf '#ffffff' -sb '#0066ff'`"
 menu = "`dmenu_path | dmenu -fn '-*-terminus-*-r-normal-*-*-160-*-*-*-*-iso8859-*' -nb '#000000' -nf '#ffffff' -sb '#0066ff'`"
@@ -37,6 +39,8 @@ layouts =
     "tileleft",
     "tilebottom",
     "tiletop",
+    "fairh",
+    "fairv",
     "magnifier",
     "max",
     "spiral",
@@ -53,17 +57,18 @@ floatapps =
 -- by class
     ["MPlayer"] = true,
     ["smplayer"] = true,
-    ["Gimp"] = true,
+    ["gimp"] = true,
     ["Inkscape"] = true,
     ["stardict"] = true,
-    ["trayer"] = true,
-    ["stalonetray"] = true,
+    --["trayer"] = true,
+    --["stalonetray"] = true,
     ["sonata"] = true,
     ["pidgin"] = true,
     ["skype"] = true,
     ["emesene"] = true,
     ["feh"] = true,
     ["tsclient"] = true,
+    ["volwheel"] = true,
     -- by instance
     ["VirtualBox"] = true,
     ["mocp"] = true
@@ -343,7 +348,7 @@ netwidget = widget({
 
 wicked.register(netwidget, 'net', 
     --' <span color="white">NET</span>: ${eth0 down} / ${eth0 up} [ ${eth0 rx} //  ${eth0 tx} ]')
-    ' <span color="white">NET</span>: ${eth0 down} / ${eth0 up}')
+    ' <span color="white">NET</span>: ${wlan0 down} / ${wlan0 up}')
 -- Net text widget
 nettextwidget = widget({
     type = 'textbox',
@@ -366,7 +371,7 @@ netupgraphwidget:plot_properties_set('net', {
   vertical_gradient = true
 })
 wicked.register(netupgraphwidget, 'net', function (widget, args)
-  return ((args['{eth0 up_kb}']/120)*100) end, 2, 'net')
+  return ((args['{wlan0 up_kb}']/120)*100) end, 2, 'net')
 -- }}}
 
 -- {{{ Net Widget DN
@@ -385,7 +390,7 @@ netdngraphwidget:plot_properties_set('net', {
   vertical_gradient = true
 })
 wicked.register(netdngraphwidget, 'net', function (widget, args)
-  return ((args['{eth0 down_kb}']/300)*100) end, 2, 'net')
+  return ((args['{wlan0 down_kb}']/120)*100) end, 2, 'net')
 
 -- }}}
 -- Memory widget
@@ -449,7 +454,7 @@ end
 mystatusbar2 = {}
 for s = 1, screen.count() do
     mystatusbar2[s] = statusbar({ position = "bottom", name = "mystatusbar2" .. s, height = 20,
-                                   fg = beautiful.fg_normal, bg = beautiful.bg_normal })
+                                   fg = beautiful.fg_normal, bg = beautiful.bgb_normal })
     -- Add widgets to the statusbar - order matters
     mystatusbar2[s]:widgets({ 
         space,
@@ -470,14 +475,13 @@ for s = 1, screen.count() do
         memiconbox,
         membarw,
         bar,
-        --netwidget,
         nettextwidget,
         netdngraphwidget,
         space,
         netupgraphwidget,
-        bar,
-        mpdiconbox,
-        mpdwidget,
+        --bar,
+        --mpdiconbox,
+        --mpdwidget,
 --        mysystray
         s == screen.count() and mysystray or nil
     })
@@ -549,6 +553,7 @@ keybinding({ modkey }, "s", function () awful.spawn("smplayer") end):add()
 keybinding({ modkey, "Shift" }, "o", function () awful.spawn("opera") end):add()
 keybinding({ modkey }, "d", function () awful.spawn(dict) end):add()
 keybinding({ modkey }, "i", function () awful.spawn("pidgin") end):add()
+keybinding({ modkey }, "v", function () awful.spawn(vm) end):add()
 keybinding({ modkey, "Shift" }, "u", function () awful.spawn("skype") end):add()
 keybinding({ modkey }, "F12", function () awful.spawn(lock) end):add()
 keybinding({ modkey }, "p", function () awful.spawn(menu) end):add()
