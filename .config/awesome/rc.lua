@@ -20,13 +20,13 @@ require("wicked")
  
  		if string.find(status, "on", 1, true) then
 -- 			volume = volume .. "%"
-            widget:bar_properties_set("vol", {["bg"] = "#000000"})
+            pb_volume:bar_properties_set("vol", {["bg"] = "#000000"})
  		else
 -- 			volume = volume .. "M"
-            widget:bar_properties_set("vol", {["bg"] = "#cc3333"})
+            pb_volume:bar_properties_set("vol", {["bg"] = "#cc3333"})
  		end
 -- 		widget.text = volume
-        widget:bar_data_add("vol", volume)
+        pb_volume:bar_data_add("vol", volume)
  	elseif mode == "up" then
  		awful.util.spawn("amixer -q -c " .. cardid .. " sset " .. channel .. " 5%+")
  		volume("update", widget)
@@ -158,6 +158,7 @@ for s = 1, screen.count() do
     tags[1][3].name = "3-coding"
     tags[1][4].name = "4-media"
     tags[1][5].name = "5-im"
+    tags[1][1].layout = "tilebottom"
     tags[1][4].layout = "floating"
     tags[1][5].layout = "floating"
     tags[1][8].layout = "floating"
