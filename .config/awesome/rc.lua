@@ -96,6 +96,7 @@ floatapps =
     --["pinentry"] = true,
     ["Inkscape"] = true,
     ["gimp"] = true,
+    ["Mirage"] = true,
     -- by instance
     ["mocp"] = true
 }
@@ -593,6 +594,9 @@ keybinding({ modkey }, "p", function () awful.util.spawn(menu) end):add()
 keybinding({ modkey }, "v", function () awful.util.spawn("VirtualBox") end):add()
 keybinding({ modkey }, "d", function () awful.util.spawn(dict) end):add()
 keybinding({ modkey }, "i", function () awful.util.spawn("pidgin") end):add()
+keybinding({ modkey }, "F2", function () awful.util.spawn(lock) end):add()
+keybinding({	}, "Print",	function () awful.util.spawn("scrot  -e 'mv $f ~/Pictures/shots/' ") end):add()
+
 --keybinding({ modkey }, "Return", function () awful.util.spawn(terminal) end):add()
 
 keybinding({ modkey, "Control" }, "r", function ()
