@@ -6,7 +6,7 @@ require("tabulous")
 require("beautiful")
 require("wicked")
 
--- Define volume function
+-- {{ Define volume control function
  cardid  = 0
  channel = "Master"
  function volume (mode, widget)
@@ -38,12 +38,13 @@ require("wicked")
  		volume("update", widget)
  	end
  end
+-- }}
 
 -- {{{ Variable definitions
 -- This is a file path to a theme file which will defines colors.
 theme_path = "/home/qianli/.config/awesome/themes/my"
 
--- This is used later as the default terminal to run.
+-- Define common variables.
 terminal = "urxvtc"
 filemanager = "rox"
 browser = "firefox"
@@ -148,7 +149,6 @@ for s = 1, screen.count() do
     for tagnumber = 1, 9 do
         tags[s][tagnumber] = tag({ name = tagnumber, layout = layouts[1] })
         -- Add tags to screen one by one
-        tags[s][tagnumber].mwfact = 0.618033988769
         tags[s][tagnumber].screen = s
     end
     -- I'm sure you want to see at least one tag.
@@ -168,53 +168,32 @@ end
 -- }}}
 
 -- {{{ Wibox
--- Create a taglist widget
-mytaglist = widget({ type = "taglist", name = "mytaglist" })
-mytaglist:buttons({
-    button({ }, 1, function (object, tag) awful.tag.viewonly(tag) end),
-    button({ modkey }, 1, function (object, tag) awful.client.movetotag(tag) end),
-    button({ }, 3, function (object, tag) tag.selected = not tag.selected end),
-    button({ modkey }, 3, function (object, tag) awful.client.toggletag(tag) end),
-    button({ }, 4, awful.tag.viewnext),
-    button({ }, 5, awful.tag.viewprev)
-})
-mytaglist.label = awful.widget.taglist.label.all
-
--- Create a tasklist widget
-mytasklist = widget({ type = "tasklist", name = "mytasklist" })
-mytasklist:buttons({
-    button({ }, 1, function (object, c) client.focus = c; c:raise() end),
-    button({ }, 4, function () awful.client.focus.byidx(1) end),
-    button({ }, 5, function () awful.client.focus.byidx(-1) end)
-})
-mytasklist.label = awful.widget.tasklist.label.currenttags
-
 -- Create a textbox widget
 mytextbox = widget({ type = "textbox", name = "mytextbox", align = "right" })
 -- Set the default text in textbox
 mytextbox.text = "<b><small> " .. AWESOME_RELEASE .. " </small></b>"
 
--- Create a laucher widget
+-- Create a laucher widget and a main menu
+myawesomemenu = {
+   {"manual", terminal .. " -e man awesome"},
+   {"edit config", terminal .. " -e nano ~/.config/awesome/rc.lua"},
+   {"restart", "echo \"awesome.restart()\" | awesome-client"},
+   {"quit", "echo \"awesome.quit()\" | awesome-client"}
+}
+
+mymainmenu = {
+   {"awesome", myawesomemenu, "/usr/share/awesome/icons/awesome16.png" },
+   {"open terminal", terminal}
+}
+
 mylauncher = awful.widget.launcher({ name = "mylauncher",
                                      image = "/usr/share/awesome/icons/awesome16.png",
-                                     command = terminal .. " -e man awesome"})
+                                     menu = {"mymainmenu", mymainmenu}
+                                  })
 
 -- Create a systray
 mysystray = widget({ type = "systray", name = "mysystray", align = "right" })
 
--- Create an iconbox widget which will contains an icon indicating which layout we're using.
--- We need one layoutbox per screen.
-mylayoutbox = {}
-for s = 1, screen.count() do
-    mylayoutbox[s] = widget({ type = "imagebox", name = "mylayoutbox", align = "left" })
-    mylayoutbox[s]:buttons({
-        button({ }, 1, function () awful.layout.inc(layouts, 1) end),
-        button({ }, 3, function () awful.layout.inc(layouts, -1) end),
-        button({ }, 4, function () awful.layout.inc(layouts, 1) end),
-        button({ }, 5, function () awful.layout.inc(layouts, -1) end)
-    })
-    mylayoutbox[s].image = image("/usr/share/awesome/icons/layouts/tilew.png")
-end
 
 -- {{ Create my widgets
 -- Separator widgets
@@ -274,7 +253,7 @@ cpuwidget = widget({
     name = 'cpuwidget'
 })
 cpuwidget:buttons({
-    button({ }, 1, function ()awful.spawn("urxvt -e htop") end)
+    button({ }, 1, function ()awful.util.spawn("urxvt -e htop") end)
     })
 wicked.register(cpuwidget, 'cpu',
     ' <span color="white">CPU:</span> $1%')
@@ -305,7 +284,19 @@ mpdiconbox = widget({ type = "textbox", name = "mpdiconbox", align = "left" })
 		return  ' '..l
 	end
 	end, 3)
-
+--MPD Widget 2
+mpdswidget = widget({
+    type = 'textbox',
+        name = 'mpdswidget'
+        })
+wicked.register(mpdswidget, wicked.widgets.mpd, 
+    function (widget, args)
+       if args[1]:find("volume:") == nil then
+          return ' <span color="white"> - Now Playing:</span> '..args[1]
+           else
+         return ''
+        end
+        end)
 --Volume widget
 voliconbox = widget({ type = "textbox", name = "voliconbox", align = "left" })
 	voliconbox.text = "<bg image=\"/home/qianli/.config/awesome/sound.png\" resize=\"false\" />"
@@ -313,7 +304,7 @@ voliconbox = widget({ type = "textbox", name = "voliconbox", align = "left" })
         button({ }, 4, function ()awful.util.spawn("amixer set Master 2dB+ unmute") end),
 	    button({ }, 5, function ()awful.util.spawn("amixer set Master 2dB- unmute") end),
 	    button({ }, 1, function ()awful.util.spawn("amixer set Master mute") end),
-	    button({ modkey }, 1, function ()awful.spawn("amixer set Master unmute") end)
+	    button({ modkey }, 1, function ()awful.util.spawn("amixer set Master unmute") end)
     })
 volumewidget = widget({
     type = 'textbox',
@@ -338,8 +329,8 @@ wicked.register(volumewidget, 'function', function (widget, args)
    return ''..v
 end, 4)
 	volumewidget:buttons ({
-        button({ }, 4, function ()awful.spawn("amixer set Master 2dB+ unmute") end),
-	    button({ }, 5, function ()awful.spawn("amixer set Master 2dB- unmute") end)
+        button({ }, 4, function ()awful.util.spawn("amixer set Master 2dB+ unmute") end),
+	    button({ }, 5, function ()awful.util.spawn("amixer set Master 2dB- unmute") end)
     })
 ---- second volume widget
 pb_volume =  widget({ type = "progressbar", name = "pb_volume", align = "left" })
@@ -448,7 +439,7 @@ memiconbox = widget({ type = "textbox", name = "memiconbox", align = "left" })
 	membarw.ticks_gap = 0
 	membarw:bar_properties_set('mem', {border_color = '#999999',fg = '#ff0000',reverse = false,min_value = 0,max_value = 100})
 membarw:buttons ({
-    button({ }, 1, function ()awful.spawn("urxvt -e htop") end)
+    button({ }, 1, function ()awful.util.spawn("urxvt -e htop") end)
     })
 	wicked.register(membarw, 'mem', '$1',10,'mem')
 
@@ -456,44 +447,69 @@ membarw:buttons ({
 shuticonbox = widget({ type = "textbox", name = "shuticonbox", align = "right"})
 shuticonbox.text = "<bg image=\"/home/qianli/.config/awesome/closeW.png\" resize=\"false\" />"
 shuticonbox:buttons ({
-    button({ }, 1, function ()awful.spawn("sudo halt") end),
-    button({ }, 3, function ()awful.spawn("sudo reboot") end)
+    button({ }, 1, function ()awful.util.spawn("sudo halt") end),
+    button({ }, 3, function ()awful.util.spawn("sudo reboot") end)
     })
 
 -- }}
 
--- Create 2 wiboxs for each screen and add it
-mywibox1 = {}
+-- Create a top wibox for each screen and add it
+mywibox_top = {}
 mypromptbox = {}
+mylayoutbox = {}
+mytaglist = {}
+mytaglist.buttons = { button({ }, 1, awful.tag.viewonly),
+                      button({ modkey }, 1, awful.client.movetotag),
+                      button({ }, 3, function (tag) tag.selected = not tag.selected end),
+                      button({ modkey }, 3, awful.client.toggletag),
+                      button({ }, 4, awful.tag.viewnext),
+                      button({ }, 5, awful.tag.viewprev) }
+mytasklist = {}
+mytasklist.buttons = { button({ }, 1, function (c) client.focus = c; c:raise() end),
+                       button({ }, 4, function () awful.client.focus.byidx(1) end),
+                       button({ }, 5, function () awful.client.focus.byidx(-1) end) }
+
 for s = 1, screen.count() do
-    mywibox1[s] = wibox({ position = "top", height = 20, name = "mywibox1" .. s,
-                             fg = beautiful.fg_normal, bg = beautiful.bg_normal })
+    -- Create a promptbox for each screen
     mypromptbox[s] = widget({ type = "textbox", name = "mypromptbox" .. s, align = "left" })
+    -- Create an imagebox widget which will contains an icon indicating which layout we're using.
+    -- We need one layoutbox per screen.
+    mylayoutbox[s] = widget({ type = "imagebox", name = "mylayoutbox", align = "left" })
+    mylayoutbox[s]:buttons({ button({ }, 1, function () awful.layout.inc(layouts, 1) end),
+                             button({ }, 3, function () awful.layout.inc(layouts, -1) end),
+                             button({ }, 4, function () awful.layout.inc(layouts, 1) end),
+                             button({ }, 5, function () awful.layout.inc(layouts, -1) end) })
+    -- Create a taglist widget
+    mytaglist[s] = awful.widget.taglist.new(s, awful.widget.taglist.label.all, mytaglist.buttons)
+
+    -- Create a tasklist widget
+    mytasklist[s] = awful.widget.tasklist.new(function(c)
+                                                  return awful.widget.tasklist.label.currenttags(c, s)
+                                              end, mytasklist.buttons)
+
+    -- Create the wibox
+    mywibox_top[s] = wibox({ position = "top", height = 20,name = "mywibox_top" .. s,
+                         fg = beautiful.fg_normal, bg = beautiful.bg_normal })
     -- Add widgets to the wibox - order matters
-    mywibox1[s]:widgets({
-        mytaglist,
-        mylayoutbox[s],
-        space,
---        voliconbox,
---        space,
---        volumewidget,
-        pb_volume,
-        space,
-        mytasklist,
-        --mylauncher,
-        mypromptbox[s],
-        --mytextbox,
-        s == 1 and mysystray or nil
-    })
-    mywibox1[s].screen = s
+    mywibox_top[s].widgets = { mytaglist[s],
+                           --mylauncher,
+                           mylayoutbox[s],
+                           space,
+                           pb_volume,
+                           space,
+                           mytasklist[s],
+                           mypromptbox[s],
+                           --mytextbox,
+                           s == 1 and mysystray or nil }
+    mywibox_top[s].screen = s
 end
---
-mywibox2 = {}
+--  Create a bottom wibox
+mywibox_bottom = {}
 for s = 1, screen.count() do
-    mywibox2[s] = statusbar({ position = "bottom", name = "mywibox2" .. s, height = 20,
+    mywibox_bottom[s] = wibox({ position = "bottom", name = "mywibox_bottom" .. s, height = 20,
                                    fg = beautiful.fg_normal, bg = beautiful.bgb_normal })
     -- Add widgets to the statusbar - order matters
-    mywibox2[s]:widgets({ 
+    mywibox_bottom[s].widgets = { 
         space,
         baticonbox,
         battextwidget,
@@ -516,6 +532,7 @@ for s = 1, screen.count() do
         netdngraphwidget,
         space,
         netupgraphwidget,
+        mpdswidget,
         datewidget,
         spacer,
         shuticonbox
@@ -524,15 +541,15 @@ for s = 1, screen.count() do
         --mpdwidget,
 --        mysystray
         --s == screen.count() and mysystray or nil
-    })
-    mywibox2[s].screen = s
+    }
+    mywibox_bottom[s].screen = s
 end
 
 -- }}}
 
 -- {{{ Mouse bindings
 awesome.buttons({
-    button({ }, 3, function () awful.util.spawn(terminal) end),
+    button({ }, 3, function () awful.menu.new("mymainmenu", mymainmenu) end),
     button({ }, 4, awful.tag.viewnext),
     button({ }, 5, awful.tag.viewprev)
 })
@@ -597,8 +614,6 @@ keybinding({ modkey }, "i", function () awful.util.spawn("pidgin") end):add()
 keybinding({ modkey }, "F2", function () awful.util.spawn(lock) end):add()
 keybinding({	}, "Print",	function () awful.util.spawn("scrot  -e 'mv $f ~/Pictures/shots/' ") end):add()
 
---keybinding({ modkey }, "Return", function () awful.util.spawn(terminal) end):add()
-
 keybinding({ modkey, "Control" }, "r", function ()
                                            mypromptbox[mouse.screen].text =
                                                awful.util.escape(awful.util.restart())
@@ -608,7 +623,6 @@ keybinding({ modkey, "Shift" }, "q", awesome.quit):add()
 -- Client manipulation
 keybinding({ modkey }, "m", awful.client.maximize):add()
 keybinding({ modkey, "Shift" }, "f", function () client.focus.fullscreen = not client.focus.fullscreen end):add()
---keybinding({ modkey, "Shift" }, "c", function () client.focus:kill() end):add()
 keybinding({ modkey }, "w", function () client.focus:kill() end):add()
 keybinding({ modkey }, "j", function () awful.client.focus.byidx(1); client.focus:raise() end):add()
 keybinding({ modkey }, "k", function () awful.client.focus.byidx(-1);  client.focus:raise() end):add()
@@ -819,7 +833,7 @@ awful.hooks.arrange.register(function (screen)
     -- Uncomment if you want mouse warping
     --[[
     if client.focus then
-        local c_c = client.focus:coords()
+        local c_c = client.focus:geometry()
         local m_c = mouse.coords()
 
         if m_c.x < c_c.x or m_c.x >= c_c.x + c_c.width or
@@ -840,5 +854,5 @@ awful.hooks.timer.register(1, function ()
     -- mytextbox.text = " " .. os.date() .. " "
 end)
 -- Add volume timer
-awful.hooks.timer.register(10, function () volume("update", tb_volume) end)
+awful.hooks.timer.register(10, function () volume("update", pb_volume) end)
 -- }}}
