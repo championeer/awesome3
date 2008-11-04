@@ -117,6 +117,7 @@
 ;; Color-theme
 ;;(add-to-list 'load-path "/usr/share/emacs/site-lisp")
 (require 'color-theme)
+(color-theme-initialize)
 (color-theme-gnome2)
 
 ;; Common Setting
@@ -128,7 +129,7 @@
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
 (global-font-lock-mode t);语法高亮
 (auto-image-file-mode t);打开图片显示功能
-(fset 'yes-or-no-p 'y-or-n-p);以 y/n代表 yes/no，可能你觉得不需要，呵呵。
+(fset 'yes-or-no-p 'y-or-n-p);以 y/n代表 yes/no
 (setq column-number-mode t);显示列号
 (setq line-number-mode t);显示行号
 (show-paren-mode t);显示括号匹配
@@ -136,9 +137,9 @@
 (display-time-mode 1);显示时间，格式如下
 (setq display-time-24hr-format t)
 (setq display-time-day-and-date t)
-(tool-bar-mode nil);去掉那个大大的工具栏
-(scroll-bar-mode nil);去掉滚动条，因为可以使用鼠标滚轮了 ^_^
-(mouse-avoidance-mode 'animate);光标靠近鼠标指针时，让鼠标指针自动让开，别挡住视线。很好玩阿，这个功能
+(tool-bar-mode nil);去掉工具栏
+(scroll-bar-mode nil);去掉滚动条
+(mouse-avoidance-mode 'animate);光标靠近鼠标指针时，让鼠标指针自动让开，别挡住视线。
 (setq kill-ring-max 200);设置粘贴缓冲条目数量
 (setq mouse-yank-at-point t);支持中键粘贴
 (transient-mark-mode t);高亮显示要拷贝的区域
@@ -154,7 +155,7 @@
 (setq inhibit-startup-message t)
 ;;; Use spaces instead of tabs to indent
 (setq-default indent-tabs-mode nil)
-(setq default-tab-width 4)
+(setq default-tab-width 2)
 (setq tab-stop-list())
 ;;; Turn on auto-fill. 
 (setq auto-fill-mode t)
@@ -277,7 +278,56 @@ that was stored with ska-point-to-register."
   (let ((tmp (point-marker)))
         (jump-to-register 8)
         (set-register 8 tmp)))
+;;-------------------------------------------
+;;不用标记而复制
+; C-c w: for copying word
+(defun copy-word (&optional arg)
+    "Copy words at point into kill-ring"
+    (interactive "P")
+    (let ((beg (progn (if (looking-back "[a-zA-Z0-9]" 1) (backward-word 1)) (point))) 
+        (end (progn (forward-word arg) (point))))
+    (copy-region-as-kill beg end))
+)
+(global-set-key (kbd "C-c w") (quote copy-word))
 
+; C-c l: for copying line
+(defun copy-line (&optional arg)
+    "Save current line into Kill-Ring without mark the line "
+    (interactive "P")
+    (let ((beg (line-beginning-position)) 
+   	      (end (line-end-position arg)))
+    (copy-region-as-kill beg end))
+)
+(global-set-key (kbd "C-c y") (quote copy-line))
+
+; C-c p: for copying paragraph
+(defun copy-paragraph (&optional arg)
+    "Copy paragraphes at point"
+    (interactive "P")
+    (let ((beg (progn (backward-paragraph 1) (point))) 
+          (end (progn (forward-paragraph arg) (point))))
+    (copy-region-as-kill beg end))
+)
+(global-set-key (kbd "C-c p") (quote copy-paragraph))
+
+; C-c s: for copying string
+(defun copy-string (&optional arg)
+    "Copy a sequence of string into kill-ring"
+    (interactive)
+    (setq onPoint (point))
+    (let ( 
+            ( beg  (progn (re-search-backward "[\t ]" (line-beginning-position) 3 1) 
+                   (if (looking-at "[\t ]") (+ (point) 1) (point) ) )
+            )
+            ( end  (progn  (goto-char onPoint) (re-search-forward "[\t ]" (line-end-position) 3 1)
+                   (if (looking-back "[\t ]") (- (point) 1) (point) ) )
+            )
+	     )
+     (copy-region-as-kill beg end)
+     )
+)
+(global-set-key (kbd "C-c s") (quote copy-string))
+;;------------------------------------------------------
 ;aspell with emacs
 (setq-default ispell-program-name "aspell")
 (setq-default ispell-local-dictionary "american")
@@ -347,11 +397,89 @@ that was stored with ska-point-to-register."
 ;;----------------------end of dired-------------------------------
 ;;LISP files to be loaded
 
-;; Load w3m browser
-;(require 'w3m-load)
+;;--------- Load w3m browser--------------------------------
+(require 'w3m-load)
 ;(setq browse-url-browser-function 'w3m-browse-url)
-;(autoload 'w3m-browse-url "w3m" "Ask a WWW browser to show a URL" t)
-;(global-set-key "\C-xm" 'browse-url-at-point)
+(setq browse-url-browser-function 'browse-url-generic)
+(setq browse-url-generic-program "/usr/bin/conkeror")
+(setq w3m-home-page "http://bullog.cn")
+(eval-after-load "w3m-search"
+    '(add-to-list 'w3m-search-engine-alist
+    '("wikipedia" "http://en.wikipedia.org/wiki/%s" nil)
+    '("tpb" "http://thepiratebay.org/search/%s/0/99/0" nil)))
+(autoload 'w3m-browse-url "w3m" "Ask a WWW browser to show a URL" t)
+(global-set-key "\C-xu"
+    '(lambda () (interactive)
+        (let ((url (thing-at-point 'url)))
+        (let ((browse-url-browser-function 'browse-url-generic))
+            (progn
+                (other-frame 1)
+                (browse-url url))))))
+(global-set-key "\C-xm" 'browse-url-at-point)
+
+(let ((map (make-keymap)))
+(suppress-keymap map)
+(define-key map [backspace] 'w3m-scroll-down-or-previous-url)
+(define-key map [delete] 'w3m-scroll-down-or-previous-url)
+(define-key map "\C-?" 'w3m-scroll-down-or-previous-url)
+(define-key map "f" 'w3m-next-anchor)
+(define-key map "b" 'w3m-previous-anchor)
+(define-key map "n" 'next-line)
+(define-key map "p" 'previous-line)
+(define-key map "\C-n" 'w3m-next-buffer)
+(define-key map "\C-p" 'w3m-previous-buffer)
+(define-key map "\C-t" 'w3m-copy-buffer)
+(define-key map "\C-m" 'w3m-view-this-url)
+(define-key map "\C-c\C-k" 'w3m-process-stop)
+(define-key map [(shift return)] 'w3m-view-this-url-new-session)
+(define-key map [(shift kp-enter)] 'w3m-view-this-url-new-session)
+(define-key map [(button2)] 'w3m-mouse-view-this-url)
+(define-key map [(shift button2)] 'w3m-mouse-view-this-url-new-session)
+(define-key map " " 'scroll-up)
+(define-key map "a" 'w3m-bookmark-add-current-url)
+(define-key map "\M-a" 'w3m-bookmark-add-this-url)
+(define-key map "+" 'w3m-antenna-add-current-url)
+(define-key map "A" 'w3m-antenna)
+(define-key map "c" 'w3m-print-this-url)
+(define-key map "C" 'w3m-print-current-url)
+(define-key map "d" 'w3m-wget)
+(define-key map "D" 'w3m-download-this-url)
+(define-key map "g" 'w3m-goto-url)
+(define-key map "G" 'w3m-goto-url-new-session)
+(define-key map "h" 'describe-mode)
+(define-key map "H" 'w3m-gohome)
+(define-key map "I" 'w3m-toggle-inline-images)
+(define-key map "\M-i" 'w3m-save-image)
+(define-key map "M" 'w3m-view-url-with-external-browser)
+(define-key map "B" 'w3m-view-next-page)
+(define-key map "o" 'w3m-history)
+(define-key map "O" 'w3m-db-history)
+(define-key map "F" 'w3m-view-next-page)
+(define-key map "B" 'w3m-view-previous-page)
+(define-key map "q" 'w3m-close-window)
+(define-key map "Q" 'w3m-quit)
+(define-key map "R" 'w3m-reload-this-page)
+(define-key map "s" 'w3m-search)
+(define-key map "S" (lambda ()
+(interactive)
+(let ((current-prefix-arg t))
+(call-interactively 'w3m-search))))
+(define-key map "u" 'w3m-view-parent-page)
+(define-key map "v" 'w3m-bookmark-view)
+(define-key map "W" 'w3m-weather)
+(define-key map "=" 'w3m-view-header)
+(define-key map "\\" 'w3m-view-source)
+(define-key map "?" 'describe-mode)
+(define-key map ">" 'w3m-scroll-left)
+(define-key map "<" 'w3m-scroll-right)
+(define-key map "." 'beginning-of-buffer)
+(define-key map "^" 'w3m-view-parent-page)
+(define-key map "]" 'w3m-next-form)
+(define-key map "[" 'w3m-previous-form)
+(define-key map "}" 'w3m-next-image)
+(define-key map "{" 'w3m-previous-image)
+(define-key map "\C-c\C-c" 'w3m-submit-form)
+(setq dka-w3m-map map))
 ;;-------------- Load CEDET-----------------------------------
 ;(load-file "/usr/share/emacs/site-lisp/cedet/common/cedet.el")
 ;; Enabling various SEMANTIC minor modes. See semantic/INSTALL for more ideas.
@@ -452,6 +580,9 @@ that was stored with ska-point-to-register."
 ;; Load python-mode
 (autoload 'python-mode "python-mode.el" "Python mode." t)
 (setq auto-mode-alist (append '(("/*.\.py$" . python-mode)) auto-mode-alist))
+;; Load lua-mode
+(setq auto-mode-alist (cons '("\.lua$" . lua-mode) auto-mode-alist))
+(autoload 'lua-mode "lua-mode" "Lua editing mode." t)
 ;;----------------------------------------------
 ;;-----------emacs wiki------------------------
 ;(add-to-list 'load-path "/usr/share/emacs/site-lisp/emacs-wiki")
