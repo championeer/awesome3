@@ -8,6 +8,9 @@
 ;(setq default-process-coding-system 'euc-cn)
 ;(setq-default pathname-coding-system 'euc-cn)
 ;; 
+;;--------Load Path-----------------------------
+(add-to-list 'load-path "/home/qianli/.emacs.d/lisp")
+;;------------------------------------------------
 (server-start);start emacs server
 (prefer-coding-system 'utf-8)
 (require 'unicad);encoding
@@ -115,7 +118,6 @@
 (put 'LaTeX-hide-environment 'disabled nil)
 
 ;; Color-theme
-;;(add-to-list 'load-path "/usr/share/emacs/site-lisp")
 (require 'color-theme)
 (color-theme-initialize)
 (color-theme-gnome2)
@@ -361,7 +363,6 @@ that was stored with ska-point-to-register."
 ;    (setq TeX-show-compilation t)
                                       
 ;;------------tabbar-----------------------------
-(add-to-list 'load-path "/home/qianli/.emacs.d/lisp")
 (require 'tabbar)
 ;(setq tabbar-speedkey-use t)
 ;(setq tabbar-speedkey-prefix (kbd "<f1>"))
@@ -399,7 +400,6 @@ that was stored with ska-point-to-register."
 
 ;;--------- Load w3m browser--------------------------------
 (require 'w3m-load)
-;(setq browse-url-browser-function 'w3m-browse-url)
 (setq browse-url-browser-function 'browse-url-generic)
 (setq browse-url-generic-program "/usr/bin/conkeror")
 (setq w3m-home-page "http://bullog.cn")
@@ -545,7 +545,7 @@ that was stored with ska-point-to-register."
 (add-hook 'php-mode-user-hook 'turn-on-font-lock)
 
 ;; Load mmm-mode
-(setq load-path (cons "/usr/share/emacs/site-lisp/mmm-mode" load-path))
+;(setq load-path (cons "/usr/share/emacs/site-lisp/mmm-mode" load-path))
 (require 'mmm-mode)
 (setq mmm-global-mode 'maybe)
 (mmm-add-group
@@ -577,16 +577,19 @@ that was stored with ska-point-to-register."
 ;           (cons '("\\.po\\'\\|\\.po\\." . po-mode) auto-mode-alist))
 ;(autoload 'po-mode "po-mode" "Major mode for translators to edit PO files" t)
 
-;; Load python-mode
-(autoload 'python-mode "python-mode.el" "Python mode." t)
-(setq auto-mode-alist (append '(("/*.\.py$" . python-mode)) auto-mode-alist))
-;; Load lua-mode
-(setq auto-mode-alist (cons '("\.lua$" . lua-mode) auto-mode-alist))
-(autoload 'lua-mode "lua-mode" "Lua editing mode." t)
+;;--- Load python-mode---
+;(autoload 'python-mode "python-mode.el" "Python mode." t)
+;(setq auto-mode-alist (append '(("/*.\.py$" . python-mode)) auto-mode-alist))
+;;--- Load lua-mode---
+;(setq auto-mode-alist (cons '("\.lua$" . lua-mode) auto-mode-alist))
+;(autoload 'lua-mode "lua-mode" "Lua editing mode." t)
 ;;----------------------------------------------
 ;;-----------emacs wiki------------------------
 ;(add-to-list 'load-path "/usr/share/emacs/site-lisp/emacs-wiki")
 ;(require 'emacs-wiki)
+;;---------twitter---------------------------
+;(load-file "/home/qianli/.emacs.d/lisp/twit.el")
+(require 'twit)
 ;;--------- Org-mode--------------------------
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 (global-set-key "\C-cl" 'org-store-link)
@@ -596,7 +599,7 @@ that was stored with ska-point-to-register."
 (setq org-log-done t)
 (add-hook 'org-mode-hook 'turn-on-font-lock) ; Org buffers only
 ;; remember with orgmode
-(add-to-list 'load-path "/usr/share/emacs/site-lisp/remember")
+;(add-to-list 'load-path "/usr/share/emacs/site-lisp/remember")
 (require 'remember)
 (org-remember-insinuate)
 (setq org-directory "~/my/org/")
@@ -607,6 +610,9 @@ that was stored with ska-point-to-register."
  '(("Todo" ?t "* TODO %?\n %i\n %a" "~/my/org/TODO.org" "Tasks")
    ("Journal" ?j "* %U %?\n\n %i\n %a" "~/my/org/JOURNAL.org")
    ("Idea" ?i "* %^{Title}\n %i\n %a" "~/my/org/JOURNAL.org" "New Ideas")))
+;----------------------
+(setq org-icalendar-include-todo t)
+(setq org-agenda-files '("/home/qianli/my/plan.org"))
 ;;------------end of org----------------------
 
 ;;--------- Planner/Muse/Remember--------------------
@@ -933,3 +939,21 @@ that was stored with ska-point-to-register."
   (c-set-offset 'arglist-close 0))
 
 (add-to-list 'auto-mode-alist '("/drupal.*\\.\\(php\\|module\\|inc\\|test\\)$" . drupal-mode))
+(custom-set-variables
+  ;; custom-set-variables was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ '(twit-pass "JAZHAO1027")
+ '(twit-user "qianli"))
+(custom-set-faces
+  ;; custom-set-faces was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ '(twit-author-face ((t (:foreground "DeepPink4" :weight bold :height 0.9 :family "dejavu sans mono"))))
+ '(twit-info-face ((t (:foreground "gray51" :slant italic :height 0.8))))
+ '(twit-message-face ((default (:height 1.1 :family "Microsoft Yahei")) (nil (:foreground "gray28"))))
+ '(twit-title-face ((t (:background "powder blue" :foreground "black"))))
+ '(twit-zebra-1-face ((t (:background "gray80"))))
+ '(twit-zebra-2-face ((t (:background "gray74")))))
