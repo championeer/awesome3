@@ -15,18 +15,9 @@ if version >= 603
 set helplang=cn
 endif
 
-set nu
+set nu " display line number
 
-" An example for a vimrc file.
-"
-" Maintainer: Bram Moolenaar <Bram@vim.org>
-" Last change: 2002 Sep 19
-"
-" To use it, copy it to
-" for Unix and OS/2: ~/.vimrc
-" for Amiga: s:.vimrc
-" for MS-DOS and Win32: $VIM\_vimrc
-" for OpenVMS: sys$login:.vimrc
+set cmdheight=1
 
 " When started as "evim", evim.vim will already have done these settings.
 if v:progname =~? "evim"
@@ -42,7 +33,7 @@ else
 set backup " keep a backup file
 endif
 
-set history=100 " keep 100 lines of command line history
+set history=500 " keep 100 lines of command line history
 set ruler " show the cursor position all the time
 set rulerformat=%20(%2*%<%f%=\ %m%r\ %3l\ %c\%p%%%)
 set showcmd " display incomplete commands
@@ -108,8 +99,8 @@ endif " has("autocmd")
 
 
 "Enable folding
-set nofen
-set fdl=0
+"set nofen
+"set fdl=0
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""
 "Indent
@@ -150,8 +141,8 @@ endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""
 set showmatch
 set matchtime=5
-
 set ignorecase
+set smartcase
 set incsearch
 
 "set listchars=tab:\|\,trail:.,extends:>,precedes:<,eol:$
@@ -166,11 +157,9 @@ set laststatus=2
 """"""""""""""""""""""""""""""""""""""""""""""""""""""
 "auto format
 set formatoptions=tcrqn
-
-set tabstop=4
-
-set softtabstop=4
-set shiftwidth=4
+set tabstop=2
+set softtabstop=2
+set shiftwidth=2
 "tab->space
 set expandtab                   
 "set nowrap
@@ -184,8 +173,28 @@ set smarttab
 " Set vim plugins settings
 let Tlist_Use_Right_Window=1
 let Tlist_File_Fold_Auto_Close=1
+let Tlist_Compact_Format=1
+let Tlist_Exit_OnlyWindow=1
+let Tlist_Inc_Winwidth=1
+let Tlist_Enable_Fold_Column=0
 
-let Tlist_Compart_Format=1
+"""""""""""""""""""""""""""""""""""""""""""""""""""
+" Set bracket matching and comment formats
+"""""""""""""""""""""""""""""""""""""""""""""""""""
+set matchpairs+=<:>
+set comments-=s1:/*,mb:*,ex:*/
+set comments+=s:/*,mb:**,ex:*/
+set comments+=fb:*
+set comments+=b:\"
+set comments+=n::
+
+"""""""""""""""""""""""""""""""""""
+" Cursor keys suck. Use ctrl with home keys to move in insert mode.
+"""""""""""""""""""""""""""""""""""
+imap <C-h> <Left>
+imap <C-j> <Down>
+imap <C-k> <Up>
+imap <C-l> <Right>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""
 "Autocommands
@@ -223,6 +232,38 @@ map <Leader>u :UMiniBufExplorer<cr>
 map <Leader>t :TMiniBufExplorer<cr>
 autocmd BufRead,BufNew :call UMiniBufExplorer
 """"""""""""""""""""""""""""""""""""
+" bufExplorer
+""""""""""""""""""""""""""""""""""""
+"map <leader>be :BufExplorer<cr>
+
+""""""""""""""""""""""""""""""""""""
+" Set taglist plugin options
+""""""""""""""""""""""""""""""""""""
+let Tlist_Use_Right_Window = 1
+let Tlist_Exit_OnlyWindow = 1
+let Tlist_Enable_Fold_Column = 0
+let Tlist_Compact_Format = 1
+let Tlist_File_Fold_Auto_Close = 0
+let Tlist_Inc_Winwidth = 1
+
+" Toggle taglist script
+map <F7> :Tlist<CR>
+
+""""""""""""""""""""""""""""""""""
+" VTreeExplorer
+""""""""""""""""""""""""""""""""""
+map <F12> :VSTreeExplore <CR>
+let g:treeExplVertical=1
+let g:treeExplWinSize=35
+let g:treeExplDirSort=1
+
+""""""""""""""""""""""""""""""""""""
+" MRU
+""""""""""""""""""""""""""""""""""""
+let MRU_File = '/home/qianli/.vim/.vim_mru_files'
+let MRU_Max_Entries=20
+let MRU_Exclude_Files = '^/tmp/.*\|^/var/tmp/.*'
+""""""""""""""""""""""""""""""""""""
 " => Grep
 """"""""""""""""""""""""""""""""""""
 nnoremap <silent> <F3> :Grep<CR>
@@ -237,7 +278,16 @@ endif
 """"""""""""""""""""""""""""""
 "Gvim
 """"""""""""""""""""""""""""""
-"if has("gui_running")
+if has("gui_running")
 "gui
-"colorscheme desert
-"endif
+colorscheme desert
+set guifont=Monaco\ 10
+endif
+
+"""""""""""""""""""""""""""""
+"key binding
+"""""""""""""""""""""""""""""
+" To save, ctrl-s.
+nmap <c-s> :w<CR>
+imap <c-s> <Esc>:w<CR>a
+

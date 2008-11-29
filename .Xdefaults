@@ -4,8 +4,8 @@ Xft.dpi:96
 URxvt.geometry:             80x36+80+80
 !!URxvt.background:           rgba:0000/0000/0000/dddd
 URxvt.background:           rgba:0000/0000/0000/9999
-!!URxvt.foreground:           #CCCCCC
-URxvt.foreground:           #DDDDDD
+URxvt.foreground:           #CCCCCC
+#URxvt.foreground:           #DDDDDD
 URxvt.scrollBar:            False
 URxvt.scrollstyle:          next
 ! Use shift+pageup/down to scroll in screen
@@ -18,7 +18,8 @@ URxvt.saveLines:            1500
 URxvt.preeditType:          Root
 URxvt.borderLess:           False
 URxvt.title:                urxvt
-URxvt.font:xft:DejaVu Sans Mono:size=10:antialias=true,xft:Microsoft YaHei:size=10:antialias=true
+!!URxvt.font:xft:DejaVu Sans Mono:size=10:antialias=true,xft:Microsoft YaHei:size=10:antialias=true
+URxvt.font:xft:Monaco:size=10:antialias=true,xft:Microsoft YaHei:size=10:antialias=true
 URxvt.depth:                32
 !redefine color to use tango theme in vim
 !Black
