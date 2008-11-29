@@ -35,7 +35,7 @@ endif
 
 set history=500 " keep 100 lines of command line history
 set ruler " show the cursor position all the time
-set rulerformat=%20(%2*%<%f%=\ %m%r\ %3l\ %c\%p%%%)
+"set rulerformat=%20(%2*%<%f%=\ %m%r\ %3l\ %c\%p%%%)
 set showcmd " display incomplete commands
 set incsearch " do incremental searching
 set confirm " popup confirm box when unsaving or opening readonly files
@@ -168,11 +168,11 @@ set smarttab
 """""""""""""""""""""""""""""""""""""""""""""""""""""""
 "Ctags
 """""""""""""""""""""""""""""""""""""""""""""""""""""""
-"let Tlist_Sort_Type="name"
+let Tlist_Sort_Type="name"
 
 " Set vim plugins settings
 let Tlist_Use_Right_Window=1
-let Tlist_File_Fold_Auto_Close=1
+let Tlist_File_Fold_Auto_Close=0
 let Tlist_Compact_Format=1
 let Tlist_Exit_OnlyWindow=1
 let Tlist_Inc_Winwidth=1
@@ -196,6 +196,14 @@ imap <C-j> <Down>
 imap <C-k> <Up>
 imap <C-l> <Right>
 
+""""""""""""""""""""""""""""""""""""""""""""""""""
+" Press ,e to jump to the same dir as current file
+""""""""""""""""""""""""""""""""""""""""""""""""""
+if has("unix")
+    map ,e :e <C-R>=expand("%:p:h") . "/" <CR>
+else
+    map ,e :e <C-R>=expand("%:p:h") . "\" <CR>
+endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""
 "Autocommands
 """""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -210,7 +218,8 @@ autocmd FileType php set omnifunc=phpcomplete#CompletePHP
 autocmd FileType c set omnifunc=ccomplete#Complete
 
 set foldenable
-set foldmethod=manual
+"set foldmethod=manual
+set foldmethod=marker
 nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>
 
 """""""""""""""""""""""""""""""

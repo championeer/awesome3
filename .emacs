@@ -15,8 +15,10 @@
 (prefer-coding-system 'utf-8)
 (require 'unicad);encoding
 (require 'linum);add line number
+(require 'redo);; add redo mode
 ;;----------------Font Setting---------------------------
-(set-default-font "DejaVu Sans Mono-10")
+;(set-default-font "DejaVu Sans Mono-10")
+(set-default-font "Monaco-10")
  (set-fontset-font (frame-parameter nil 'font)
                'unicode '("Microsoft YaHei" . "unicode-bmp"))
 ;;----------------end of font setting-------------------
@@ -32,13 +34,15 @@
 ;; "C-,"设为屏幕左移命令
 ;(global-set-key (kbd "C-.") 'scroll-right)
 ;; "C-."设为屏幕右移命令
-(global-set-key [f1] 'manual-entry)
-(global-set-key [C-f1] 'info )
-(global-set-key [f2] 'kill-this-buffer)
-;(global-set-key [f3] 'repeat-complex-command)
-
-;(global-set-key [f4] 'other-window)
-;; 跳转到 Emacs 的另一个buffer窗口
+(global-set-key [f1] 'info )
+(global-set-key [C-f1] 'manual-entry)
+(global-set-key [f2] 'undo)
+(global-set-key [f3] 'redo)
+(global-set-key [f4] 'kill-this-buffer)
+(global-set-key [f6] 'dired-jump)
+(global-set-key [f8] 'calendar)
+(global-set-key [C-f8] 'list-bookmarks)
+(global-set-key [f9] 'gnus)
 
 (defun du-onekey-compile ()
 "Save buffers and start compile"
@@ -46,11 +50,11 @@
 (save-some-buffers t)
 (switch-to-buffer-other-window "*compilation*")
 (compile compile-command))
-(global-set-key [C-f5] 'compile)
-(global-set-key [f5] 'du-onekey-compile)
+(global-set-key [C-f11] 'compile)
+(global-set-key [f11] 'du-onekey-compile)
 ;; C-f5, 设置编译命令; f5, 保存所有文件然后编译当前窗口文件
 
-(global-set-key [f6] 'gdb)
+(global-set-key [f12] 'gdb)
 ;;F6设置为在Emacs中调用gdb
 
 (global-set-key [C-f7] 'previous-error)
@@ -61,20 +65,10 @@
 (interactive)
 (split-window-vertically)
 (eshell))
-(global-set-key [(f8)] 'open-eshell-other-buffer)
-(global-set-key [C-f8] 'eshell)
+(global-set-key [(f5)] 'open-eshell-other-buffer)
+(global-set-key [C-f5] 'eshell)
 ;;目的是开一个shell的小buffer，用于更方便地测试程序(也就是运行程序了)，我经常会用到。
 ;;f8就是另开一个buffer然后打开shell，C-f8则是在当前的buffer打开shell
-
-(global-set-key [f10] 'undo)
-;;设置F10为撤销
-
-(global-set-key [f11] 'calendar)
-;;设置F11快捷键指定Emacs 的日历系统
-
-(global-set-key [f4] 'list-bookmarks)
-;;设置F4 快速察看日程安排
-
 
 (global-set-key (kbd "M-g") 'goto-line)
 ;;设置M-g为goto-line
@@ -85,16 +79,21 @@
 (global-set-key (kbd "C-M-SPC") 'set-mark-command)
 ;;这样 我就不用按 C-@ 来 setmark 了, C-@ 很不好按。
 
-(global-set-key [(f3)] 'speedbar);;F3打开speedbar
-(global-set-key [f12] 'ecb-activate) ;;定义F12键为激活ecb
-(global-set-key [C-f12] 'ecb-deactivate) ;;定义Ctrl+F12为停止ecb
-(global-set-key (kbd "M-s") 'speedbar-get-focus);Alt+s让speedbar获得焦点
-(global-set-key "\C-x\C-m" 'buffer-menu-other-window);; 多开一个窗口显示已已打开的缓冲区列表
+;(global-set-key [(f3)] 'speedbar);;F3打开speedbar
+;(global-set-key [f12] 'ecb-activate) ;;定义F12键为激活ecb
+;(global-set-key [C-f12] 'ecb-deactivate) ;;定义Ctrl+F12为停止ecb
+;(global-set-key (kbd "M-s") 'speedbar-get-focus);Alt+s让speedbar获得焦点
+(global-set-key "\C-x\C-m" 'buffer-menu-other-window);; 多开一个窗口显示已打开的缓冲区列表
 (global-set-key (kbd "<home>") 'beginning-of-line)
 (global-set-key (kbd "<end>")   'end-of-line)
 (global-set-key (kbd "C-<home>") 'beginning-of-buffer)
 (global-set-key (kbd "C-<end>") 'end-of-buffer)
 (global-set-key (kbd "C-c u") 'revert-buffer);刷新文件
+(global-set-key [(control o)] 'other-window);; 切换窗口
+(global-set-key [(control tab)] 'tabbar-forward);; 切换tab
+(global-set-key (kbd "C-z k") 'browse-kill-ring);;查看前面删除的内容记录
+(global-set-key (kbd "C-z l") 'lpr-buffer);;打印当前buffer
+(global-set-key (kbd "C-z r") 'query-replace-regexp);;带正则表达式的搜索
 ;;-------------end of global key----------------------
 
 ;; 设置时间戳，标识出最后一次保存文件的时间。
@@ -157,7 +156,7 @@
 (setq inhibit-startup-message t)
 ;;; Use spaces instead of tabs to indent
 (setq-default indent-tabs-mode nil)
-(setq default-tab-width 2)
+(setq default-tab-width 4)
 (setq tab-stop-list())
 ;;; Turn on auto-fill. 
 (setq auto-fill-mode t)
@@ -367,7 +366,7 @@ that was stored with ska-point-to-register."
 ;(setq tabbar-speedkey-use t)
 ;(setq tabbar-speedkey-prefix (kbd "<f1>"))
 (tabbar-mode 1)
-;(global-set-key [(control tab)] 'tabbar-forward)
+
 ;;ctrl+tab切换tabbar
 (global-set-key (kbd "M--") 'tabbar-backward-group)
 (global-set-key (kbd "M-=") 'tabbar-forward-group)
@@ -379,7 +378,7 @@ that was stored with ska-point-to-register."
 (setq dired-recursive-deletes t) ; 可以递归的删除目录
 (setq dired-recursive-copies t) ; 可以递归的进行拷贝
 (require 'dired-x)               ; 有些特殊的功能
-(global-set-key "\C-x\C-j" 'dired-jump) ; 通过 C-x C-j 跳转到当前目录的 Dired
+;(global-set-key "\C-x\C-j" 'dired-jump) ; 通过 C-x C-j 跳转到当前目录的 Dired
 (setq dired-guess-shell-alist-user
       (list
         (list "\\.chm$" "chmsee")
