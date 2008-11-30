@@ -354,20 +354,22 @@ that was stored with ska-point-to-register."
 (add-hook 'LaTex-mode-hook 'turn-on-reftex)
 
 ;;设置XeLaTex为默认编译命令
-;(add-hook 'LaTeX-mode-hook (lambda()
-;    (add-to-list 'TeX-command-list '("XeLaTeX" "xelatex -interaction=nonstopmode " TeX-run-TeX nil t))
-;(TeX-PDF-mode t)
-;    (setq TeX-command-default "XeLaTeX")
-;    (setq TeX-save-query  nil )
-;    (setq TeX-show-compilation t)
-                                      
+(add-hook 'LaTeX-mode-hook (lambda()
+     (add-to-list 'TeX-command-list '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t))
+     (TeX-PDF-mode t)
+    (setq TeX-command-default "XeLaTeX")
+    (setq TeX-save-query  nil )
+    (setq TeX-show-compilation t)
+))
+(custom-set-variables
+ '(TeX-output-view-style (quote (("^pdf$" "." "evince %o %(outpage)"))))
+)                                      
 ;;------------tabbar-----------------------------
 (require 'tabbar)
 ;(setq tabbar-speedkey-use t)
 ;(setq tabbar-speedkey-prefix (kbd "<f1>"))
 (tabbar-mode 1)
 
-;;ctrl+tab切换tabbar
 (global-set-key (kbd "M--") 'tabbar-backward-group)
 (global-set-key (kbd "M-=") 'tabbar-forward-group)
 (global-set-key (kbd "M-1") 'tabbar-backward)
@@ -378,7 +380,6 @@ that was stored with ska-point-to-register."
 (setq dired-recursive-deletes t) ; 可以递归的删除目录
 (setq dired-recursive-copies t) ; 可以递归的进行拷贝
 (require 'dired-x)               ; 有些特殊的功能
-;(global-set-key "\C-x\C-j" 'dired-jump) ; 通过 C-x C-j 跳转到当前目录的 Dired
 (setq dired-guess-shell-alist-user
       (list
         (list "\\.chm$" "chmsee")
@@ -955,4 +956,3 @@ that was stored with ska-point-to-register."
  '(twit-message-face ((default (:height 1.1 :family "Microsoft Yahei")) (nil (:foreground "gray28"))))
  '(twit-title-face ((t (:background "powder blue" :foreground "black"))))
  '(twit-zebra-1-face ((t (:background "gray80"))))
- '(twit-zebra-2-face ((t (:background "gray74")))))
