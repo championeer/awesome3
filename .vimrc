@@ -191,10 +191,10 @@ set comments+=n::
 """""""""""""""""""""""""""""""""""
 " Cursor keys suck. Use ctrl with home keys to move in insert mode.
 """""""""""""""""""""""""""""""""""
-imap <C-h> <Left>
-imap <C-j> <Down>
-imap <C-k> <Up>
-imap <C-l> <Right>
+"imap <C-h> <Left>
+"imap <C-j> <Down>
+"imap <C-k> <Up>
+"imap <C-l> <Right>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""
 " Press ,e to jump to the same dir as current file
@@ -221,6 +221,50 @@ set foldenable
 "set foldmethod=manual
 set foldmethod=marker
 nnoremap <space> @=((foldclosed(line('.')) < 0) ? 'zc' : 'zo')<CR>
+
+" open urls with firefox
+command -bar -nargs=1 OpenURL :!firefox <args>
+ 
+""""""""""""""""""""""""""""""""""
+" () [] {}
+""""""""""""""""""""""""""""""""""
+noremap! "" ""<left>
+noremap! '' ''<left>
+ 
+noremap! (( ()<left>
+noremap! (<cr> (<cr>)<c-o>O
+noremap! (; ();<esc>hi
+noremap! (<cr>; (<cr>);<c-o>O
+noremap! ('; ('');<esc>hhi
+noremap! ("; ("");<esc>hhi
+noremap! (' ('')<esc>hi
+noremap! (" ("")<esc>hi
+ 
+noremap! {{ {}<left>
+noremap! {<cr> {<cr>}<c-o>O
+noremap! {; {};<esc>hi
+noremap! {<cr>; {<cr>};<c-o>O
+noremap! {'; {''};<esc>hhi
+noremap! {"; {""};<esc>hhi
+noremap! {' {''}<esc>hi
+noremap! {" {""}<esc>hi
+ 
+noremap! [[ []<left>
+noremap! [<cr> [<cr>]<c-o>O
+noremap! [; [];<esc>hi
+noremap! [<cr>; [<cr>];<c-o>O
+noremap! ['; [''];<esc>hhi
+noremap! ["; [""];<esc>hhi
+noremap! [' ['']<esc>hi
+noremap! [" [""]<esc>hi
+
+"""""""""""""""""""""""""""""""""""""
+" use XHTML and CSS with :TOhtml
+"""""""""""""""""""""""""""""""""""""
+let use_xhtml=1
+let html_use_css=1
+let html_ignore_folding=1
+let html_use_encoding="UTF-8"
 
 """""""""""""""""""""""""""""""
 " => Minibuffer
@@ -256,7 +300,19 @@ let Tlist_File_Fold_Auto_Close = 0
 let Tlist_Inc_Winwidth = 1
 
 " Toggle taglist script
-map <F7> :Tlist<CR>
+"map <F7> :Tlist<CR>
+map <F6> :TlistToggle
+map <F7> :TlistUpdate
+"""""""""""""""""""""""""""""""""""
+" Some key mapping
+"""""""""""""""""""""""""""""""""""
+map <F5> <Esc>gg=G''
+map <F9> :DiffChangesDiffToggle
+map <F10> :DiffChangesPatchToggle
+map <A-Right> gt
+map <A-Left> gT
+" paste/nopaste
+set pastetoggle=<F11>
 
 """"""""""""""""""""""""""""""""""
 " VTreeExplorer
