@@ -10,6 +10,7 @@
 ;; 
 ;;--------Load Path-----------------------------
 (add-to-list 'load-path "/home/qianli/.emacs.d/lisp")
+(add-to-list 'load-path "/home/qianli/.emacs.d/lisp-personal")
 ;;------------------------------------------------
 (server-start);start emacs server
 (prefer-coding-system 'utf-8)
@@ -349,7 +350,7 @@ that was stored with ska-point-to-register."
 
 (setq TeX-auto-untabify t) ;; 不使用 TAB字符缩进
 (setq LaTeX-document-regexp "document\\|CJK\\*?")  ;; CJK 环境中不缩进
-(add-hook 'LaTeX-mode-hook #'LaTeX-install-toolbar)
+(add-hook 'LaTeX-mode-hook 'LaTeX-install-toolbar)
 (add-hook 'LaTeX-mode-hook 'turn-on-auto-fill)
 (add-hook 'LaTex-mode-hook 'turn-on-reftex)
 
@@ -589,7 +590,7 @@ that was stored with ska-point-to-register."
 ;(require 'emacs-wiki)
 ;;---------twitter---------------------------
 ;(load-file "/home/qianli/.emacs.d/lisp/twit.el")
-(require 'twit)
+;(require 'twit)
 ;;--------- Org-mode--------------------------
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 (global-set-key "\C-cl" 'org-store-link)
@@ -939,20 +940,3 @@ that was stored with ska-point-to-register."
   (c-set-offset 'arglist-close 0))
 
 (add-to-list 'auto-mode-alist '("/drupal.*\\.\\(php\\|module\\|inc\\|test\\)$" . drupal-mode))
-(custom-set-variables
-  ;; custom-set-variables was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
- '(twit-pass "JAZHAO1027")
- '(twit-user "qianli"))
-(custom-set-faces
-  ;; custom-set-faces was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
- '(twit-author-face ((t (:foreground "DeepPink4" :weight bold :height 0.9 :family "dejavu sans mono"))))
- '(twit-info-face ((t (:foreground "gray51" :slant italic :height 0.8))))
- '(twit-message-face ((default (:height 1.1 :family "Microsoft Yahei")) (nil (:foreground "gray28"))))
- '(twit-title-face ((t (:background "powder blue" :foreground "black"))))
- '(twit-zebra-1-face ((t (:background "gray80"))))
