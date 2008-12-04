@@ -43,6 +43,9 @@ set clipboard+=unnamed " share clipboard with windows
 set viminfo+=! " save globle var
 set iskeyword+=_,$,@,%,#,- "no newline when meeting these characters
 set paste      "set paste mode
+"光标在窗口上下边界时距离边界7行即开始滚屏
+set so=7
+
 " For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries
 " let &guioptions = substitute(&guioptions, "t", "", "g")
 
@@ -306,6 +309,10 @@ map <F7> :TlistUpdate
 """""""""""""""""""""""""""""""""""
 " Some key mapping
 """""""""""""""""""""""""""""""""""
+" 取消被搜索字串的高亮 
+nmap <F2> :nohls<cr> 
+" 命令模式下转移光标到不同窗口 
+nmap <F4> <C-W>w
 map <F5> <Esc>gg=G''
 map <F9> :DiffChangesDiffToggle
 map <F10> :DiffChangesPatchToggle

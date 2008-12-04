@@ -91,13 +91,6 @@ zstyle ':completion:*:warnings' format $'\e[01;31m -- No Matches Found --\e[0m'
 # allow approximate
 zstyle ':completion:*:approximate:*' max-errors 1 numeric
 
-# tab completion for PID :D
-#zstyle ':completion:*:*:kill:*' menu yes select
-#zstyle ':completion:*:kill:*' force-list always
-
-# cd not select parent dir. 
-#zstyle ':completion:*:cd:*' ignore-parents parent pwd
-
 ##################################################################
 # Key bindings
 # http://mundy.yazzy.org/unix/zsh.php
@@ -156,18 +149,16 @@ alias gvim='gvim -geom 82x35'
 alias ..='cd ..'
 alias ppp-on='sudo /usr/sbin/ppp-on'
 alias ppp-off='sudo /usr/sbin/ppp-off'
-#alias firestarter='sudo su -c firestarter'
 alias mpg123='mpg123 -o oss'
 alias mpg321='mpg123 -o oss'
-#alias vba='/home/paul/downloads/VisualBoyAdvance -f 4'
 alias hist="grep '$1' /home/qianli/.zsh_history"
-#alias irssi="irssi -c irc.freenode.net -n yyz"
 alias mem="free -m"
 alias rm='rm -i'
 alias cp='cp -i'
 alias mv='mv -i'
 alias e='emacs -nw'
 alias ee='emacsclient -t'
+alias pacman='pacman-color'
 
 # command L equivalent to command |less
 alias -g L='|less' 
@@ -176,8 +167,10 @@ alias -g L='|less'
 alias -g S='&> /dev/null &'
 
 #路径别名  进入相应的路径时只要 cd ~xxx
-hash -d WWW="/home/qianli/WWW/http"
+hash -d W="/home/qianli/WWW/http"
 hash -d AV="/home/qianli/benliud/Downloaded"
+hash -d T="/home/qianli/Documents/EBooks/Tech"
+hash -d BS="/home/qianli/WWW/http/bs/wp-content/themes/bside-project"
 hash -d PKG="/var/cache/pacman/pkg"
 hash -d E="/etc/env.d"
 hash -d C="/etc/conf.d"

@@ -1,13 +1,3 @@
-;(set-language-environment 'Chinese-GB)
-;(set-keyboard-coding-system 'euc-cn)
-;(set-clipboard-coding-system 'euc-cn)
-;(set-terminal-coding-system 'euc-cn)
-;(set-buffer-file-coding-system 'euc-cn)
-;(set-selection-coding-system 'euc-cn)
-;(prefer-coding-system 'euc-cn)
-;(setq default-process-coding-system 'euc-cn)
-;(setq-default pathname-coding-system 'euc-cn)
-;; 
 ;;--------Load Path-----------------------------
 (add-to-list 'load-path "/home/qianli/.emacs.d/lisp")
 (add-to-list 'load-path "/home/qianli/.emacs.d/lisp-personal")
@@ -17,6 +7,7 @@
 (require 'unicad);encoding
 (require 'linum);add line number
 (require 'redo);; add redo mode
+(require 'tabbar);; add tabbar mode
 ;;----------------Font Setting---------------------------
 ;(set-default-font "DejaVu Sans Mono-10")
 (set-default-font "Monaco-10")
@@ -91,7 +82,8 @@
 (global-set-key (kbd "C-<end>") 'end-of-buffer)
 (global-set-key (kbd "C-c u") 'revert-buffer);刷新文件
 (global-set-key [(control o)] 'other-window);; 切换窗口
-(global-set-key [(control tab)] 'tabbar-forward);; 切换tab
+;(global-set-key [(control tab)] 'tabbar-forward);; 切换tab
+(global-set-key (kbd "C-<tab>") 'tabbar-forward);; 切换tab
 (global-set-key (kbd "C-z k") 'browse-kill-ring);;查看前面删除的内容记录
 (global-set-key (kbd "C-z l") 'lpr-buffer);;打印当前buffer
 (global-set-key (kbd "C-z r") 'query-replace-regexp);;带正则表达式的搜索
@@ -366,7 +358,7 @@ that was stored with ska-point-to-register."
  '(TeX-output-view-style (quote (("^pdf$" "." "evince %o %(outpage)"))))
 )                                      
 ;;------------tabbar-----------------------------
-(require 'tabbar)
+;(require 'tabbar)
 ;(setq tabbar-speedkey-use t)
 ;(setq tabbar-speedkey-prefix (kbd "<f1>"))
 (tabbar-mode 1)
