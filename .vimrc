@@ -160,9 +160,9 @@ set laststatus=2
 """"""""""""""""""""""""""""""""""""""""""""""""""""""
 "auto format
 set formatoptions=tcrqn
-set tabstop=2
-set softtabstop=2
-set shiftwidth=2
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
 "tab->space
 set expandtab                   
 "set nowrap
@@ -233,7 +233,6 @@ command -bar -nargs=1 OpenURL :!firefox <args>
 """"""""""""""""""""""""""""""""""
 noremap! "" ""<left>
 noremap! '' ''<left>
- 
 noremap! (( ()<left>
 noremap! (<cr> (<cr>)<c-o>O
 noremap! (; ();<esc>hi
@@ -242,7 +241,6 @@ noremap! ('; ('');<esc>hhi
 noremap! ("; ("");<esc>hhi
 noremap! (' ('')<esc>hi
 noremap! (" ("")<esc>hi
- 
 noremap! {{ {}<left>
 noremap! {<cr> {<cr>}<c-o>O
 noremap! {; {};<esc>hi
@@ -251,7 +249,6 @@ noremap! {'; {''};<esc>hhi
 noremap! {"; {""};<esc>hhi
 noremap! {' {''}<esc>hi
 noremap! {" {""}<esc>hi
- 
 noremap! [[ []<left>
 noremap! [<cr> [<cr>]<c-o>O
 noremap! [; [];<esc>hi
@@ -264,10 +261,10 @@ noremap! [" [""]<esc>hi
 """""""""""""""""""""""""""""""""""""
 " use XHTML and CSS with :TOhtml
 """""""""""""""""""""""""""""""""""""
-let use_xhtml=1
-let html_use_css=1
-let html_ignore_folding=1
-let html_use_encoding="UTF-8"
+"let use_xhtml=1
+"let html_use_css=1
+"let html_ignore_folding=1
+"let html_use_encoding="UTF-8"
 
 """""""""""""""""""""""""""""""
 " => Minibuffer
@@ -292,6 +289,13 @@ autocmd BufRead,BufNew :call UMiniBufExplorer
 """"""""""""""""""""""""""""""""""""
 "map <leader>be :BufExplorer<cr>
 
+""""""""""""""""""""""""""""""""""""
+" buftabs
+""""""""""""""""""""""""""""""""""""
+noremap <C-tab> :bnext<CR>
+noremap <C-S-tab> :bprev<CR>
+let g:buftabs_only_basename=1
+let g:buftabs_in_statusline=1
 """"""""""""""""""""""""""""""""""""
 " Set taglist plugin options
 """"""""""""""""""""""""""""""""""""
